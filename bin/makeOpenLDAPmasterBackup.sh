@@ -33,11 +33,14 @@
 #  This script makes a backup of the running OpenLDAP master.
 ###################################################################################################
 
-# Some variable definitions
-BACKUP_DIRECTORY="/var/backup/ldap"
-
 # Get the current date and store in the variable CURRENT_DATE in the form of "2007-10-15".
 CURRENT_DATE=`date +%Y-%m-%d`
+
+# Get the fully qualified domain name (FQDN) and store it in the variable FQDN int the form of <hostname>.<domain>.tld
+FQDN=`hostname --fqdn`
+
+# Some variable definitions
+BACKUP_DIRECTORY="/var/backup/ldap/${FQDN}"
 
 # Make sure the backup directory exists
 if [ -d $BACKUP_DIRECTORY ]; then
@@ -55,8 +58,8 @@ fi
 echo ""
 echo "Removing backups older than 15 days ..."
 echo "###################################################################################################"
-echo "find /var/backup/ldap/ -type f -ctime +15 -exec rm {} \; >/dev/null"
-find /var/backup/ldap/ -type f -ctime +15 -exec rm {} \; >/dev/null
+echo "find ${BACKUP_DIRECTORY} -type f -ctime +15 -exec rm {} \; >/dev/null"
+find ${BACKUP_DIRECTORY} -type f -ctime +15 -exec rm {} \; >/dev/null
 
 echo ""
 echo "Backup Started"
@@ -64,21 +67,21 @@ echo "##########################################################################
 
 # Create the Backup File.
 echo ""
-echo "Executing touch /var/backup/ldap/OpenLDAPmasterBackup.ldif.${CURRENT_DATE}"
+echo "Executing touch ${BACKUP_DIRECTORY}/OpenLDAPmasterBackup.ldif.${CURRENT_DATE}"
 echo "###################################################################################################"
-touch /var/backup/ldap/OpenLDAPmasterBackup.ldif.${CURRENT_DATE}
+touch ${BACKUP_DIRECTORY}/OpenLDAPmasterBackup.ldif.${CURRENT_DATE}
 
 # Set the proper permissions on the backup file.
 echo ""
-echo "Executing chmod 600 /var/backup/ldap/OpenLDAPmasterBackup.ldif.${CURRENT_DATE}"
+echo "Executing chmod 600 ${BACKUP_DIRECTORY}/OpenLDAPmasterBackup.ldif.${CURRENT_DATE}"
 echo "###################################################################################################"
-chmod 600 /var/backup/ldap/OpenLDAPmasterBackup.ldif.${CURRENT_DATE}
+chmod 600 ${BACKUP_DIRECTORY}/OpenLDAPmasterBackup.ldif.${CURRENT_DATE}
 
 # -l ldif-file: Write LDIF to specified file instead of standard output.
 echo ""
-echo "Executing /usr/sbin/slapcat -l /var/backup/ldap/OpenLDAPmasterBackup.ldif.${CURRENT_DATE}"
+echo "Executing /usr/sbin/slapcat -l ${BACKUP_DIRECTORY}/OpenLDAPmasterBackup.ldif.${CURRENT_DATE}"
 echo "###################################################################################################"
-/usr/sbin/slapcat -l /var/backup/ldap/OpenLDAPmasterBackup.ldif.${CURRENT_DATE}
+/usr/sbin/slapcat -l ${BACKUP_DIRECTORY}/OpenLDAPmasterBackup.ldif.${CURRENT_DATE}
 
 echo ""
 echo "Backup Finished"
@@ -86,4 +89,4 @@ echo "##########################################################################
 
 echo ""
 echo "You can look at the backup file with:"
-echo "vi /var/backup/ldap/OpenLDAPmasterBackup.ldif.${CURRENT_DATE}"
+echo "vi ${BACKUP_DIRECTORY}/OpenLDAPmasterBackup.ldif.${CURRENT_DATE}"

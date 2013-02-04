@@ -40,6 +40,19 @@
 # Some variable definitions
 BACKUP_DIRECTORY="/var/backup/ldap"
 
+# List all machines that have an openldap backup
+echo ""
+echo "The following machines have an existing OpenLDAP backup:"
+echo "###################################################################################################"
+ls -al $BACKUP_DIRECTORY
+
+# Some cli comments
+echo ""
+echo "Please enter the machine from which you want to restore from: " 
+read FQDN
+
+BACKUP_DIRECTORY="/var/backup/ldap/${FQDN}"
+
 # List the current backups
 echo ""
 echo "The following OpenLDAP backups exist:"
@@ -108,7 +121,7 @@ rm -rf /var/lib/openldap-hdb/*
 echo ""
 echo "Trying to restore the OpenLDAP server ..."
 echo "###################################################################################################"
-/usr/sbin/slapadd -l /var/backup/ldap/OpenLDAPmasterBackup.ldif.${BACKUP_DATE}
+/usr/sbin/slapadd -l ${BACKUP_DIRECTORY}/OpenLDAPmasterBackup.ldif.${BACKUP_DATE}
 
 echo ""
 echo "Recreating the indices on the OpenLDAP server ..."
