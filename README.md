@@ -1,4 +1,4 @@
 ldap-utils
 ==========
 
-stepping stone LDAP related scripts
+foss-cloud LDAP related scripts
