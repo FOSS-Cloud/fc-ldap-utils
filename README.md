@@ -1,4 +1,4 @@
 ldap-utils
 ==========
 
-foss-cloud LDAP related scripts
+FOSS-Cloud LDAP related scripts
